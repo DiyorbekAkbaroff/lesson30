@@ -1,31 +1,77 @@
-# algorithm
 import json
 
-# 1. ikka fileni oqib olishimiz kerak
-f1 = open("people01.json")
-f2 = open("people02.json")
 
-p1 = json.loads(f1.read())
-p2 = json.loads(f2.read())
+def fayllar(joy):
+    try:
+        with open(joy, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        print("Fayl topilmad")
+        return []
+    except json.JSONDecodeError:
+        print("JSONda xatolik")
+        return []
 
-# 2. unique personlarni aniqlash
-p = []
+# Erkelani sonini husoblemz:
+def man(data):
+    count = 0
+    for person in data:
+        if 'gender' in person:
+            if person['gender'] == 'Male':
+                count += 1
+    return count
 
-for person in p1:
-    if person not in p:
-        p.append(person)
+# Ayollar sonini hisoblemz
+def woman(data):
+    count = 0
+    for person in data:
+        if 'gender' in person:
+            if person['gender'] == 'Female':
+                count += 1
+    return count
 
-for person in p2:
-    if person not in p:
-        p.append(person)
+# Hindistonlilani chiqoramiza
+def india(data):
+    indian = []
+    for person in data:
+        if 'country' in person:
+            if person['country'] == 'India':
+                indian.append(person)
+    return indian
 
-# 3. people.json ga yozish
-f = open('people.json', 'w')
+# 20 yoshdan kicila
+def kiciklar(data):
+    kicik = []
+    for person in data:
+        if 'age' in person:
+            if person['age'] < 20:
+                kicik.append(person)
+    return kicik
 
-json_data = json.dumps(p, indent=4)
-f.write(json_data)
+# Muhandislarri topamz
+def engi(data):
+    engineers = []
+    for person in data:
+        if 'job' in person:
+            if person['job'] == 'Engineer':
+                engineers.append(person)
+    return engineers
 
-# close all files
-f1.close()
-f2.close()
-f.close()
+joy = "people.json"
+odamlar = fayllar(joy)
+
+if odamlar:
+    print(f"Erkelalar soni: {man(odamlar)}")
+    print(f"Ayollar soni: {woman(odamlar)}")
+
+    print("Hindistonliklar:")
+    for user in india(odamlar):
+        print(user)
+
+    print("20 yoshdan kichikla:")
+    for user in kiciklar(odamlar):
+        print(user)
+
+    print("Muhandisla:")
+    for engineer in engi(odamlar):
+        print(engineer)
